@@ -10,5 +10,6 @@ This project analyzes CellProfiler output CSVs, counts droplets, normalizes data
 - Generate bar plots
 - Streamlit interface for local folder or ZIP input (small datasets)
 
+## Link to Droplet Analysis Tool
 ```bash
-streamlit run app.py
+https://ttmdlab.streamlit.app/
