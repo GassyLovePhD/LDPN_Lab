@@ -30,7 +30,6 @@ def compute_droplet_counts(all_data):
     df_counts = pd.DataFrame(droplet_counts)
     df_counts["Concentration_numeric"] = df_counts["Concentration"].astype(float)
     df_counts = df_counts.sort_values(by=["Metal", "Antibiotic", "Concentration_numeric"])
-    df_counts.to_csv("droplet_counts_summary.csv", index=False)
     return df_counts
 
 def normalize_to_control(df_counts):
