@@ -18,20 +18,27 @@ st.set_page_config(layout="wide")
 st.title("Droplet Analysis Tool")
 st.sidebar.header("Input Parameters")
 
+# -*-*-*- Sidebar Inputs -*-*-*-
+input_method = st.sidebar.radio("Input Method", ("Folder Path", " ZIP File"))
+input_folder = None
+zip_extract_path = "uploaded_data"
 
-input_folder = st.sidebar.text_input("Experiment folder path", placeholder="path/to/your/data")
-zip_file = st.sidebar.file_uploader("Upload dataset (.zip)", type=["zip"])
-if zip_file:
-    with zipfile.ZipFile(zip_file) as zip_ref:
-        safe_extract(zip_ref, "uploaded_data")
-        members = zip_ref.namelist()
-        progress = st.sidebar.progress(0)
+if input_method == "Folder Path":
+    input_folder = st.sidebar.text_input("Experiment folder path", placeholder="path/to/your/data")
 
-        for i, member in enumerate(members):
-            zip_ref.extract(member, "uploaded_data")
-            progress.progress((i + 1) / len(members))
+elif input_method == " ZIP File":
+    zip_file = st.sidebar.file_uploader("Upload dataset (.zip)", type=["zip"])
+    if zip_file:
+        with zipfile.ZipFile(zip_file) as zip_ref:
+            safe_extract(zip_ref, "uploaded_data")
+            members = zip_ref.namelist()
+            progress = st.sidebar.progress(0)
 
-    st.sidebar.success("Extraction complete!")
+            for i, member in enumerate(members):
+                zip_ref.extract(member, "uploaded_data")
+                progress.progress((i + 1) / len(members))
+
+        st.sidebar.success("Extraction complete!")
 
 csv_file_name = st.sidebar.text_input("CSV file name", placeholder="GFP_Filtered_Droplets.csv")
 run_button = st.sidebar.button("Run Analysis")
@@ -39,7 +46,7 @@ run_button = st.sidebar.button("Run Analysis")
 # -*-*-*- Main Application Logic -*-*-*-
 if run_button:
     if not input_folder or not os.path.isdir(input_folder):
-        st.error("Please provide a valid experiment folder path.")
+        st.error("Please provide a valid experiment folder path or ZIP dataset.")
         st.stop()
 
     with st.spinner("Loading data..."):
